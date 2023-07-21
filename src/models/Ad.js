@@ -16,7 +16,7 @@ const modelSchema = new mongoose.Schema({
 
 })
 
-const modelName = 'State'
+const modelName = 'Ads'
 
 if(mongoose.connection && mongoose.connection.models[modelName]){
     module.exports = mongoose.connection.models[modelName]
