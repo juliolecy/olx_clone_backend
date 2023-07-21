@@ -9,7 +9,7 @@ const modelSchema = new mongoose.Schema({
   dateCreated: Date,
   title: String,
   price: Number,
-  priceNegotiable: boolean,
+  priceNegotiable: Boolean,
   description: String,
   views: Number,
   status: String
