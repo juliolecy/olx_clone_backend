@@ -13,7 +13,7 @@ router.get('/ping', (req, res)=>{
 //States
 router.get('/states', Auth.private, UserController.getStates) //Private
 //User
-router.post('/user/signin', AthValidator.signin, AuthController.signin)
+router.post('/user/signin', AuthValidator.signin, AuthController.signin)
 router.post('/user/signup',AuthValidator.signup, AuthController.signup)
 router.get('/user/me',Auth.private, UserController.info) //Private
 router.put('/user/me', Auth.private, UserController.editAction) //Private
