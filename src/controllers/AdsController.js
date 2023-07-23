@@ -1,5 +1,6 @@
 const {v4: uuid}  = require('uuid')
 const jimp = require('jimp')
+const ObjectId = require('mongoose').Types.ObjectId
 
 const Category = require('../models/Category')
 const User = require('../models/User')
@@ -34,6 +35,17 @@ module.exports = {
 
         if(!title || !cat){
             res.json({error: 'Preencha o título e a categoria.'})
+            return
+        }
+
+        if(cat.length < 12){
+            res.json({error: 'Categoria inexistente.'})
+            return
+        }
+
+        const category = await Category.findById(cat)
+        if(!category){
+            res.json({error: 'Categoria inexistente.'})
             return
         }
 
@@ -84,7 +96,7 @@ module.exports = {
         const info = await newAd.save()
             res.json({id: info._id})
         
-    },
+    }, 
     getList: async (req, res)=>{
         let {sort = 'asc', offset= 0, limit = 8, q, cat, state} = req.query
         let filters = {status: true}
@@ -138,7 +150,135 @@ module.exports = {
         }
         res.json({ads, total})
     },
-    getItem: async (req, res)=>{},
-    editAction: async (req, res)=>{}
-} 
+    getItem: async (req, res)=>{
+        let {id ,other = null} = req.query
+
+        if(!id){
+            res.json({error: 'Sem produto'})
+            return
+        }
+
+        if(id.length < 12){
+            res.json({error: 'ID inválido'})
+            return;
+        }
+
+        const ad = await Ad.findById(id);
+        if(!ad){
+            res.json({error: 'Produto inexistente'})
+            return
+        }
+
+        ad.views++;
+        await ad.save();
+
+        let images = []
+            for (let i in ad.images){
+                images.push(`${process.env.BASE}/media/${ad.images[i].url}`)
+            }
+
+            let category = await Category.findById(ad.category).exec()
+            let userInfo = await User.findById(ad.idUser).exec()
+            let stateInfo = await StateModel.findById(ad.state).exec()
+            let others = []
+
+            if(other){
+                const otherData = await Ad.find({status: true, idUser: ad.idUser}).exec()
+                let image = `${process.env.BASE}/media/default.jpg`
+
+                let defaultImg = otherData[i].images.find(e=> e.default);
+                if(defaultImg){
+                    image=`${process.env.BASE}/media/${defaultImg.url}`
+                }
+            
+
+                for(let i in otherData){
+                    if(otherData[i]._id.toString() !== ad._id.toString()){
+                        others.push({
+                            id: otherData[i]._id,
+                            title: otherData[i].title,
+                            price: otherData[i].price,
+                            priceNegotiable: otherData[i].priceNegotiable, 
+                            image
+                        })
+                    }
+                }
+            }
+
+            res.json({
+                id: ad._id,
+                title: ad.title,
+                price: ad.price,
+                priceNegotiable: ad.priceNegotiable,
+                description: ad.description,
+                views: ad.views,
+                dateCreated: ad.dateCreated,
+                images,
+                category,
+                userInfo: {
+                    name: userInfo.name,
+                    email: userInfo.email
+                },
+                stateName: stateInfo.name,
+                others
+            })
+
+    },
+    editAction: async (req, res)=>{
+        let {id} = req.params
+        let { title, status, price, priceneg, desc, cat, images, token } = req.body
+
+        if(id.length < 12){
+            res.json({error: 'ID inválido'});
+            return
+        }
+
+        const ad = await Ad.findById(id).exec()
+        if(!ad){
+            res.json({error: 'Anúncio não encontrado.'})
+        }
+
+        const user = await User.findOne({token}).exec()
+        if(user._id.toString() !== ad.idUser){
+            res.json({error: 'Você não é o dono deste anúncio.'})
+        }
+
+        let updates = {};
+
+        if(title){
+            updates.title = title
+        }
+        if(price){
+            price = price.replace('.', '').replace(',', '.').replace('R$ ', '');
+            price = parseFloat(price)
+            updates.price = price
+        } 
+        if(priceneg){
+            updates.priceNegotiable = priceneg
+        }
+        if(status){
+            updates.status = status
+        }
+        if(desc){
+            updates.description = desc
+        }
+        if(cat){
+            const category = await Category.findOne({slug: cat}).exec()
+                if(!category){
+                    res.json({error: 'Categoria inexistente.'})
+                    return
+                }
+            
+            updates.category = category._id.toString()
+        }
+
+        if(images){
+            updates.images = images;
+        }
+
+        await Ad.findByIdAndUpdate(id, {$set: updates})
+
+        res.json({error: ''})
+    }
+}  
 
