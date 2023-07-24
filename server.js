@@ -3,13 +3,11 @@ const express = require('express')
 const mongoose = require('mongoose')
 const cors = require('cors')
 const fileupload = require('express-fileupload')
+const connectDatabase = require('./src/database/db')
 
 const apiRoutes = require('./src/routes')
 
-mongoose.connect(process.env.DATABASE, {
-        useNewUrlParser: true,
-        useUnifiedTopology: true,
-})
+connectDatabase()
 
 mongoose.Promise = global.Promise
 mongoose.connection.on('error', (error)=>{
