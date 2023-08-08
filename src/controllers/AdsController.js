@@ -153,7 +153,6 @@ module.exports = {
     },
     getItem: async (req, res)=>{
         let {id ,other = null} = req.query
-
         if(!id){
             res.json({error: 'Sem produto'})
             return
@@ -185,16 +184,18 @@ module.exports = {
 
             if(other){
                 const otherData = await Ad.find({status: true, idUser: ad.idUser}).exec()
-                let image = `${process.env.BASE}/media/default.jpg`
-
-                let defaultImg = otherData[i].images.find(e=> e.default);
-                if(defaultImg){
-                    image=`${process.env.BASE}/media/${defaultImg.url}`
-                }
-            
-
+                
+                
                 for(let i in otherData){
                     if(otherData[i]._id.toString() !== ad._id.toString()){
+                        let image = `${process.env.BASE}/media/default.jpg`
+                        
+                        let defaultImg = otherData[i].images.find(e=> e.default);
+                        if(defaultImg){
+                            image=`${process.env.BASE}/media/${defaultImg.url}`
+                        }
+                        
+
                         others.push({
                             id: otherData[i]._id,
                             title: otherData[i].title,
@@ -204,7 +205,7 @@ module.exports = {
                         })
                     }
                 }
-            }
+            }   
 
             res.json({
                 id: ad._id,
