@@ -16,7 +16,9 @@ mongoose.connection.on('error', (error)=>{
 
 const server = express()
 
-server.use(cors())
+server.use(cors({
+    origin: '*'
+}))
 server.use(express.json())
 server.use(express.urlencoded({extended: true}))
 server.use(fileupload())

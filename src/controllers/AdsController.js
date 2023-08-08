@@ -1,3 +1,4 @@
+require('dotenv').config()
 const {v4: uuid}  = require('uuid')
 const jimp = require('jimp')
 const ObjectId = require('mongoose').Types.ObjectId
