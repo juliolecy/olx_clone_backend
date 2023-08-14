@@ -1,3 +1,23 @@
+---
+
+<h1 align="center"> 
+Backend Clone da Olx
+</h1>
+
+<p align="center">
+  <img alt="Repository size" src="https://img.shields.io/github/repo-size/juliolecy/olx_clone_backend">
+  
+  <a href="https://github.com/fallying/olx_clone_backend/commits/master">
+    <img alt="GitHub last commit" src="https://img.shields.io/github/last-commit/juliolecy/olx_clone_backend">
+  </a>
+    
+   <img alt="License" src="https://img.shields.io/badge/license-MIT-brightgreen">
+</p>
+
+
+
+--- 
+
 # Documentação da API
 
 Esta documentação descreve os endpoints e funcionalidades desta API.
@@ -11,6 +31,21 @@ Esta documentação descreve os endpoints e funcionalidades desta API.
     
    <img alt="License" src="https://img.shields.io/badge/license-MIT-brightgreen">
 </p>
+
+## 💻 Funcionalidades
+<div >
+<p>✅ Manipulação no banco de dados</p>
+<p>✅ Login</p>
+<p>✅ Cadastro</p>
+<p>✅ Token de autenticação</p>
+<p>✅ Listagem de estados</p>
+<p>✅ Listagem de categorias</p>
+<p>✅ Listagem de anúncios</p>
+<p>✅ Adicionar anúncio</p>
+<p>✅ Editar anúncio</p>
+<p>✅ Remover anúncio</p>
+ </div>
+
 
 ## Endpoints
 
@@ -84,6 +119,10 @@ $ npm run start-dev
 ```
 
 ---
+
+## 📝 Licença
+
+Este projeto esta sobe a licença [MIT](./LICENSE).
 
 
 
